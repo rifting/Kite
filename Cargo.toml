@@ -1,0 +1,13 @@
+[package]
+name = "kite"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-protobuf = "0.11.0"
+actix-web = "4.10.2"
+prost = "0.13.5"
+url = "2.5.4"
+
+[build-dependencies]
+prost-build = "0.13.5"

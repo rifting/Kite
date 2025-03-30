@@ -1,0 +1,34 @@
+// Source: https://source.chromium.org/chromium/chromium/src/+/main:components/supervised_user/core/browser/proto/kidsmanagement_messages.proto
+// The proto there seems to be a bit outdated. I had to add the TimestampWrapper field.
+
+syntax = "proto3";
+
+package kite.classify_url;
+
+message ClassifyUrlRequest {
+  // The URL to be classified.
+  optional string url = 3;
+
+  // region_code is a 2-letter ISO 3166-1 code.
+  // When set, uses specific logic to classify URLs for that region.
+  optional string region_code = 4;
+}
+
+message ClassifyUrlResponse {
+  enum DisplayClassification {
+    UNKNOWN_DISPLAY_CLASSIFICATION = 0;
+
+    // Allow url to be displayed
+    ALLOWED = 1;
+
+    // Block url and allow kid to request parent for permission
+    RESTRICTED = 2;
+  }
+
+  optional TimestampWrapper timestamp = 1;
+  optional DisplayClassification display_classification = 2;
+}
+
+message TimestampWrapper {
+  uint64 timestamp = 2;
+}
