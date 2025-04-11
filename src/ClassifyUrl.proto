@@ -16,7 +16,7 @@ message ClassifyUrlRequest {
 
 message ClassifyUrlResponse {
   enum DisplayClassification {
-    UNKNOWN_DISPLAY_CLASSIFICATION = 0;
+    UNKNOWN_DISPLAY_CLASSIFICATION = 0; // Note: UNKNOWN_DISPLAY_CLASSIFICATION seems to have the same effect as blocking a site.
 
     // Allow url to be displayed
     ALLOWED = 1;

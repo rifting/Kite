@@ -1,0 +1,20 @@
+# Web Server
+[server]
+# Port for the web server
+port = 1337
+# IP for the web server
+ip = "127.0.0.1"
+
+# Included HTTP Proxy
+[proxy]
+# The proxy will not run if this is false
+enabled = true
+# Port for the proxy
+port = 1235
+# IP for the proxy
+ip = "127.0.0.1"
+
+[blocking]
+# "all", "example" or "none"
+# "example" blocks example.com and lets all other traffic through.
+mode = "all"

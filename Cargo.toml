@@ -8,6 +8,16 @@ actix-protobuf = "0.11.0"
 actix-web = "4.10.2"
 prost = "0.13.5"
 url = "2.5.4"
+bytes = "1.10.1"
+clap = { version = "4.5.35", features = ["derive"] }
+http-body-util = "0.1.3"
+http-mitm-proxy = "0.14.0"
+hyper = "1.6.0"
+rcgen = { version = "0.13.2", features = ["x509-parser"] }
+tokio = "1.44.2"
+serde = "1.0.219"
+toml = "0.8.20"
+serde_derive = "1.0.219"
 
 [build-dependencies]
 prost-build = "0.13.5"
