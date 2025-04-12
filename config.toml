@@ -10,11 +10,15 @@ ip = "127.0.0.1"
 # The proxy will not run if this is false
 enabled = true
 # Port for the proxy
-port = 1235
+port = 3003
 # IP for the proxy
 ip = "127.0.0.1"
+# External Cert & Private key. If left blank, a new one will be generated and sent to stdout.
+cert = ""
+private_key = ""
 
 [blocking]
 # "all", "example" or "none"
 # "example" blocks example.com and lets all other traffic through.
+# THIS IS NOT FINISHED YET
 mode = "all"
