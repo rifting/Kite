@@ -13,12 +13,16 @@ enabled = true
 port = 3003
 # IP for the proxy
 ip = "127.0.0.1"
-# External Cert & Private key. If left blank, a new one will be generated and sent to stdout.
+# External Cert & Private key. If left blank, new ones will be generated and sent to stdout.
 cert = ""
 private_key = ""
+# Whether or not to pass requests to the real kids management server if Kite can't figure out what to do with them.
+transparency = true
 
 [blocking]
 # "all", "example" or "none"
 # "example" blocks example.com and lets all other traffic through.
-# THIS IS NOT FINISHED YET
-mode = "all"
+# "all" means all sites are blocked.
+# "none" will unblock everything.
+# If the input is not one of these options, it will default to "none"
+mode = "none"

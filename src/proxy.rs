@@ -8,7 +8,7 @@ struct ExternalCert {
 pub mod proxy {
     use http_body_util::BodyExt;
     use http_mitm_proxy::{moka::sync::Cache, DefaultClient, MitmProxy};
-    use hyper::service::service_fn;
+    use hyper::{body::Incoming, service::service_fn, Request};
     use kite::Data;
     use rcgen::CertifiedKey;
 
@@ -63,33 +63,17 @@ pub mod proxy {
                     async move {
                         // Redirect to the Kite server
 
-                        // @TODO: Path filtering
-                        // && req.uri().path().starts_with("/kidsmanagement/v1/people/me:classifyUrl")
-
-                        // For now we are redirecting all traffic to the kidsmanagement API and not transparently rewriting it
-                        if req.uri().host() == Some("kidsmanagement-pa.googleapis.com")  {
-                            req.headers_mut().insert(
-                                hyper::header::HOST,
-                                hyper::header::HeaderValue::from_maybe_shared(format!("{}:{}", kite_ip, kite_port))
-                                    .unwrap(),
-                            );
-                
-                            let mut parts = req.uri().clone().into_parts();
-                            parts.scheme = Some(hyper::http::uri::Scheme::HTTP);
-                            parts.authority = Some(
-                                hyper::http::uri::Authority::from_maybe_shared(format!("{}:{}", kite_ip, kite_port))
-                                    .unwrap(),
-                            );
-                            parts.path_and_query = Some(
-                                parts
-                                    .path_and_query
-                                    .unwrap()
-                                    .to_string()
-                                    // .trim_start_matches("/resource")
-                                    .parse()
-                                    .unwrap(),
-                            );
-                            *req.uri_mut() = hyper::Uri::from_parts(parts).unwrap();
+                        // Transparency mode
+                        // If enabled, only redirect for the classifyUrl path.
+                        if !config.proxy.transparency {
+                            if req.uri().host() == Some("kidsmanagement-pa.googleapis.com") {
+                                rewrite_request(&mut req, &kite_ip, kite_port);
+                            }
+                        } else {
+                            if req.uri().host() == Some("kidsmanagement-pa.googleapis.com") &&
+                               req.uri().path().starts_with("/kidsmanagement/v1/people/me:classifyUrl") {
+                                rewrite_request(&mut req, &kite_ip, kite_port);
+                            }
                         }
                         
                         let (res, _upgrade) = client.send_request(req).await?;
@@ -138,5 +122,30 @@ pub mod proxy {
         let cert = param.self_signed(&key_pair).unwrap();
     
         rcgen::CertifiedKey { cert, key_pair }
-    }    
+    } 
+
+    fn rewrite_request(req: &mut Request<Incoming>, kite_ip: &str, kite_port: u16) {
+        req.headers_mut().insert(
+            hyper::header::HOST,
+            hyper::header::HeaderValue::from_maybe_shared(format!("{}:{}", kite_ip, kite_port))
+                .unwrap(),
+        );
+
+        let mut parts = req.uri().clone().into_parts();
+        parts.scheme = Some(hyper::http::uri::Scheme::HTTP);
+        parts.authority = Some(
+            hyper::http::uri::Authority::from_maybe_shared(format!("{}:{}", kite_ip, kite_port))
+                .unwrap(),
+        );
+        parts.path_and_query = Some(
+            parts
+                .path_and_query
+                .unwrap()
+                .to_string()
+                .parse()
+                .unwrap(),
+        );
+        *req.uri_mut() = hyper::Uri::from_parts(parts).unwrap();
+    }
+    
 }   

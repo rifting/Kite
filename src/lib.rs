@@ -60,7 +60,8 @@ pub struct Proxy {
     pub port: u16,
     pub ip: String,
     pub cert: String,
-    pub private_key: String
+    pub private_key: String,
+    pub transparency: bool
 }
 
 #[derive(Deserialize)]
