@@ -14,8 +14,8 @@ port = 3003
 # IP for the proxy
 ip = "127.0.0.1"
 # External Cert & Private key. If left blank, new ones will be generated and sent to stdout.
-cert = ""
-private_key = ""
+cert = "kite.crt"
+private_key = "private.pem"
 # Whether or not to pass requests to the real kids management server if Kite can't figure out what to do with them.
 transparency = true
 

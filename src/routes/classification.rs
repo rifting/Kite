@@ -26,17 +26,16 @@ pub async fn classify_url_service(msg: ProtoBuf<classify_url::ClassifyUrlRequest
 }
 
 async fn classify_host(url: Url) -> DisplayClassification {
-    let config = get_config();
+    let mode = get_config().blocking.mode.to_lowercase();
 
-    if config.blocking.mode.to_lowercase() == "example" {
-        if url.host_str() == Some("example.com") {
-            return DisplayClassification::Restricted;
-        } else {
-            return DisplayClassification::Allowed;
+    match mode.as_str() {
+        "example" => {
+            match url.host_str() {
+                Some("example.com") => DisplayClassification::Restricted,
+                _ => DisplayClassification::Allowed,
+            }
         }
-    } else if config.blocking.mode.to_lowercase() == "all" {
-        return DisplayClassification::Restricted;
-    } else {
-        return DisplayClassification::Allowed;
+        "all" => DisplayClassification::Restricted,
+        _ => DisplayClassification::Allowed,
     }
 }
